@@ -1,0 +1,76 @@
+<div class="swn">        
+    <div class="alert alert-warning max-w-4xl border-0 rounded p-4 flex shadow-xs gap-2 items-center">
+        <div class="grow flex flex-col gap-2" id="warning-msg">
+            @if( $savedata == '' )
+                Don't forget to save using the button below to lock in the planet.
+            @else
+                The planet is currently locked. To reroll, use the unlock button below.
+            @endif
+        </div>
+        </div>
+    </div>
+<div class="swn-data">
+    <input type="hidden" name="max" id="max" value="{{ $random_max }}" />
+    <input type="hidden" name="groups" id="groups" value="{{ $groups }}" />
+    @liveAttribute('savedata')
+    @for($i = 1; $i <= $random_max; $i++)
+       <div id="random_{{ $i }}" class="hide-helper" data-label="{{ ${"random_label_".$i} }}" data-group="{{ ${"random_group_".$i} }}"
+       @isset( ${"random_repeat_".$i} )
+           data-repeat={{ ${"random_repeat_".$i} }}
+       @endisset
+       >
+         <textarea class="random-data">
+             {{ ${"random_data_".$i} }}
+         </textarea>
+         <div class="swn-label">{{ ${"random_label_".$i} }}: </div>
+         <div class="swn-details" id="random_result_{{ $i }}"></div>
+		</div>
+         
+         @isset( ${"random_data_".$i."_sub1_1"} )           
+           @for($j = 1; $j <= 50; $j++)
+             @isset( ${"random_data_".$i."_sub".$j."_1"} )
+                @for($k = 1; $k <= 50; $k++)
+                  @isset( ${"random_data_".$i."_sub".$j."_".$k } )
+                    <div id="random_{{ $i }}_sub{{ $j }}_{{ $k }}" class="hide-helper" data-label="{{ ${"random_label_".$i."_sub".$j."_".$k} }}" data-group="{{ ${"random_group_".$i} }}">
+                     <textarea class="random-data">
+                         {{ ${"random_data_".$i."_sub".$j."_".$k} }}
+                     </textarea>                    
+                      <div class="swn-label">{{ ${"random_label_".$i."_sub".$j."_".$k} }}: </div>
+                      <div class="swn-details" id="random_result_{{ $i }}_sub{{ $j }}_{{ $k }}"></div>                      
+                      <input type="hidden" value="{{ ${"random_data_".$i."_sub".$j."_".$k} }}" />
+                     </div>               
+                     @continue
+                  @endisset
+                  @break
+                @endfor
+                @continue
+              @endisset
+              @break
+           @endfor
+        @endisset        
+         @isset( ${"random_repeat_".$i } ) @if( ${"random_repeat_".$i } > 1 )
+           <input type="hidden" id="random_{{ $i }}_repeat" value="{{ ${"random_repeat_".$i } }}" />
+            @for($j = 2; $j <= ${"random_repeat_".$i }; $j++)
+               <div id="random_{{ $i }}_rpt_{{ $j }}" class="hide-helper">
+                 <div class="swn-label">{{ ${"random_label_".$i} }}: </div>
+                 <div class="swn-details" id="random_result_{{ $i }}_rpt_{{ $j }}"></div>
+               </div>
+             @endfor
+         @endif @endisset        
+     @endfor     
+     
+     <a href="#" class="btn2 btn-primary btn-lock" id="swn-lock" data-lock="false" onclick="saveRandom();return false;"><i class="fa-solid fa-hourglass-start dn"></i><i class="fa-solid fa-lock"></i><span class="grow hidden sm:inline-block"> Lock </span></a>
+     <a href="#" class="btn2 btn-primary btn-lock" id="swn-unlock" data-lock="false" onclick="clearRandom();return false;"><i class="fa-solid fa-hourglass-start dn"></i><i class="fa-solid fa-lock-open"></i><span class="grow hidden sm:inline-block"> Unlock </span></a>
+</div>
+<div class="swn-template">
+    <div class="group-heading">
+        <div class="header"><h3>Label</h3></div>
+        <div class="details detail-group">
+        </div>
+    </div>
+    <div class="random-item">
+         <div class="reroll" onclick="reroll(this);return false;"><i class="fa-regular fa-dice-d20"></i></div>
+         <div class="swn-label"></div>
+         <div class="swn-details" data-group=""></div>    
+    </div>
+</div>
